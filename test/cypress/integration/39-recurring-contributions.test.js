@@ -1,3 +1,5 @@
+import { generateValidCard } from "../../stripe-helpers";
+
 describe('Recurring contributions', () => {
   let user;
   let collectiveSlug;
@@ -56,7 +58,7 @@ describe('Recurring contributions', () => {
         cy.getByDataCy('recurring-contribution-payment-menu').should('exist');
         cy.getByDataCy('recurring-contribution-add-pm-button').click();
         cy.wait(3000);
-        cy.fillStripeInput();
+        cy.fillStripeInput({ card: generateValidCard('4000056655665556') });
         cy.getByDataCy('recurring-contribution-submit-pm-button').click();
         cy.contains('[data-cy="recurring-contribution-pm-box"]', 'VISA **** 4242').within(() => {
           cy.getByDataCy('radio-select').check();
