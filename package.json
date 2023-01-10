@@ -146,6 +146,7 @@
     "prettier:check": "npm run prettier -- --check",
     "prettier:write": "npm run prettier -- --write",
     "publish-components": "npm run script scripts/publish-components/index.ts $1 -- $@",
+    "build:components": "npm run script scripts/publish-components/index.ts 0.0 -- --build-only $@",
     "script": "babel-node --extensions .js,.ts,.tsx -- $@",
     "start": "node dist/server",
     "start:ci": "nyc --silent --exclude \".next/**\" node server",
