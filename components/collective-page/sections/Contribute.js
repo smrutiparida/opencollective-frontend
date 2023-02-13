@@ -163,7 +163,6 @@ class SectionContribute extends React.PureComponent {
 
   getFinancialContributions = memoizeOne(sortedTiers => {
     const { collective, contributors, contributorsStats, isAdmin } = this.props;
-    const hasNoContributor = !this.hasContributors(contributors);
     const canContribute = collective.isActive && (!isPastEvent(collective) || isAdmin);
     const hasCustomContribution = !get(collective, 'settings.disableCustomContributions', false);
     const hasCryptoContribution =
@@ -181,7 +180,7 @@ class SectionContribute extends React.PureComponent {
               collective,
               contributors: this.getFinancialContributorsWithoutTier(contributors),
               stats: contributorsStats,
-              hideContributors: hasNoContributor,
+              hideContributors: false,
               disableCTA: !canContribute,
             },
           });
@@ -201,7 +200,7 @@ class SectionContribute extends React.PureComponent {
         waysToContribute.push({
           key: tier.id,
           Component: ContributeTier,
-          componentProps: { collective, tier, hideContributors: hasNoContributor },
+          componentProps: { collective, tier, hideContributors: false },
         });
       }
     });
