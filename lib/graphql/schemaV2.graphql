@@ -13671,6 +13671,16 @@ type Mutation {
   ): Account!
 
   """
+  [Root only] Edits account type from User to Organization
+  """
+  editAccountType(
+    """
+    Account to change the type for
+    """
+    account: AccountReferenceInput!
+  ): Account!
+
+  """
   [Root only] Clears the cache for a given account
   """
   clearCacheForAccount(
@@ -15414,14 +15424,14 @@ input TierUpdateInput {
   The public id identifying the tier (ie: dgm9bnk8-0437xqry-ejpvzeol-jdayw5re)
   """
   id: String!
-  amount: AmountInput!
+  amount: AmountInput
   name: NonEmptyString
   description: String
   button: String
   goal: AmountInput
-  type: TierType!
-  amountType: TierAmountType!
-  frequency: TierFrequency!
+  type: TierType
+  amountType: TierAmountType
+  frequency: TierFrequency
   presets: [Int!]
   maxQuantity: Int
   minimumAmount: AmountInput
@@ -15431,8 +15441,8 @@ input TierUpdateInput {
 }
 
 input TierCreateInput {
-  amount: AmountInput!
-  name: NonEmptyString
+  amount: AmountInput
+  name: NonEmptyString!
   description: String
   button: String
   goal: AmountInput
