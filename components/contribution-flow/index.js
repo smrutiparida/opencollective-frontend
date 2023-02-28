@@ -330,11 +330,20 @@ class ContributionFlow extends React.Component {
           )}/${this.props.collective.slug}`
         : `${window.location.origin}/${this.props.collective.slug}`;
 
-      const returnUrl = `${baseRoute}/donate/success?OrderId=${order.id}`;
+      const returnUrl = new URL(`${baseRoute}/donate/success`);
+      returnUrl.searchParams.set('OrderId', order.id);
+
+      const queryParams = this.getQueryParams();
+      if (queryParams.redirect) {
+        returnUrl.searchParams.set('redirect', queryParams.redirect);
+        if (queryParams.shouldRedirectParent) {
+          returnUrl.searchParams.set('shouldRedirectParent', queryParams.shouldRedirectParent);
+        }
+      }
 
       try {
         await confirmPayment(stripeData?.stripe, stripeData?.paymentIntentClientSecret, {
-          returnUrl,
+          returnUrl: returnUrl.href,
           elements: stripeData?.elements,
           type: stepPayment?.paymentMethod?.type,
           paymentMethodId: stepPayment?.paymentMethod?.data?.stripePaymentMethodId,

@@ -12,10 +12,17 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import styled from 'styled-components';
 
 import { ORDER_STATUS } from '../../lib/constants/order-status';
+import { TransactionTypes } from '../../lib/constants/transactions';
 import { formatCurrency } from '../../lib/currency-utils';
 import { API_V2_CONTEXT } from '../../lib/graphql/helpers';
 import { formatManualInstructions } from '../../lib/payment-method-utils';
-import { facebookShareURL, getCollectivePageRoute, mastodonShareURL, tweetURL } from '../../lib/url-helpers';
+import {
+  facebookShareURL,
+  getCollectivePageRoute,
+  isTrustedRedirectHost,
+  mastodonShareURL,
+  tweetURL,
+} from '../../lib/url-helpers';
 import { getWebsiteUrl } from '../../lib/utils';
 
 import Container from '../../components/Container';
@@ -28,6 +35,7 @@ import StyledLink from '../../components/StyledLink';
 import { H3, P } from '../../components/Text';
 import { withUser } from '../../components/UserProvider';
 
+import { isValidExternalRedirect } from '../../pages/external-redirect';
 import Link from '../Link';
 
 import { orderSuccessFragment } from './graphql/fragments';
@@ -123,6 +131,41 @@ class ContributionFlowSuccess extends React.Component {
     isEmbed: PropTypes.bool,
     data: PropTypes.object,
   };
+
+  componentDidUpdate() {
+    const {
+      router: { query: queryParams },
+      data: { order },
+    } = this.props;
+    if (order && queryParams.redirect) {
+      if (isValidExternalRedirect(queryParams.redirect)) {
+        const url = new URL(queryParams.redirect);
+        url.searchParams.set('orderId', order.legacyId);
+        url.searchParams.set('orderIdV2', order.id);
+        url.searchParams.set('status', order.status);
+        const transaction = find(order.transactions, { type: TransactionTypes.CREDIT });
+        if (transaction) {
+          url.searchParams.set('transactionid', transaction.legacyId);
+          url.searchParams.set('transactionIdV2', transaction.id);
+        }
+
+        const verb = 'donate';
+        const fallback = `/${this.props.collective.slug}/${verb}/success?OrderId=${order.id}`;
+        if (isTrustedRedirectHost(url.host)) {
+          if (queryParams.shouldRedirectParent) {
+            window.parent.location.href = url.href;
+          } else {
+            window.location.href = url.href;
+          }
+        } else {
+          this.props.router.push({
+            pathname: '/external-redirect',
+            query: { url: url.href, fallback, shouldRedirectParent: queryParams.shouldRedirectParent },
+          });
+        }
+      }
+    }
+  }
 
   renderCallsToAction = () => {
     const { LoggedInUser, data, isEmbed, router } = this.props;
