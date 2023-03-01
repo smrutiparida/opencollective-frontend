@@ -103,6 +103,8 @@ describe('Contribute Flow: Stripe Payment Element', () => {
       });
 
       cy.createCollectiveV2({ host: { slug: 'e2e-host' } }).as('collective');
+      cy.clearCookies();
+      cy.clearLocalStorage();
     });
 
     it('Guest', () => {
@@ -183,6 +185,8 @@ describe('Contribute Flow: Stripe Payment Element', () => {
       });
 
       cy.createCollectiveV2({ host: { slug: 'e2e-host' } }).as('collective');
+      cy.clearCookies();
+      cy.clearLocalStorage();
     });
 
     it('Guest', () => {
@@ -241,6 +245,8 @@ describe('Contribute Flow: Stripe Payment Element', () => {
       });
 
       cy.createCollectiveV2({ host: { slug: 'e2e-eur-host' } }).as('collective');
+      cy.clearCookies();
+      cy.clearLocalStorage();
     });
 
     it('Guest', () => {
@@ -300,6 +306,8 @@ describe('Contribute Flow: Stripe Payment Element', () => {
       });
 
       cy.createCollectiveV2({ host: { slug: 'e2e-eur-host' } }).as('collective');
+      cy.clearCookies();
+      cy.clearLocalStorage();
     });
 
     it('Guest', () => {
@@ -356,6 +364,8 @@ describe('Contribute Flow: Stripe Payment Element', () => {
       });
 
       cy.createCollectiveV2({ host: { slug: 'e2e-eur-host' } }).as('collective');
+      cy.clearCookies();
+      cy.clearLocalStorage();
     });
 
     it('Redirects to trusted url', () => {
