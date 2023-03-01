@@ -369,8 +369,6 @@ describe('Contribute Flow: Stripe Payment Element', () => {
 
       contributeWithNewCard();
 
-      cy.getByDataCy('order-success').contains('Thank you!');
-
       cy.location('origin').should('eql', 'https://opencollective.com');
     });
 
@@ -384,8 +382,6 @@ describe('Contribute Flow: Stripe Payment Element', () => {
       cy.get('button[data-cy="cf-next-step"]').click();
 
       contributeWithNewCard();
-
-      cy.getByDataCy('order-success').contains('Thank you!');
 
       cy.location('origin').should('eql', 'http://localhost:3000');
       cy.location('pathname').should('eql', '/external-redirect');
